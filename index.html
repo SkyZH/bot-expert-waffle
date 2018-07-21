@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <title></title>
+    <style>
+    .tri-1 {
+      width: 0;
+      height: 0;
+      border-left: 3rem solid transparent;
+      border-right: 3rem solid transparent;
+      border-bottom: 3rem solid transparent;
+      position: absolute;
+      margin-left: 7rem;
+    }
+    .tri-2 {
+      width: 0;
+      height: 0;
+      border-left: 6rem solid transparent;
+      border-right: 6rem solid transparent;
+      border-bottom: 6rem solid transparent;
+      position: absolute;
+      margin-left: 4rem;
+    }
+    .tri-3 {
+      width: 0;
+      height: 0;
+      border-left: 10rem solid transparent;
+      border-right: 10rem solid transparent;
+      border-bottom: 10rem solid transparent;
+      position: absolute;
+    }
+    .red {
+      border-bottom-color: rgb(255, 0, 0) !important;
+    }
+    .green {
+      border-bottom-color: rgb(0, 255, 0) !important;
+    }
+    .yellow {
+      border-bottom-color: rgb(255, 255, 0) !important;
+    }
+    .block:after {
+       content: " "; /* Older browser do not support empty content */
+       visibility: hidden;
+       display: block;
+       height: 11rem;
+       clear: both;
+    }
+    </style>
+  </head>
+  <body>
+    <div class="block">
+      <div class="tri-3 yellow"></div>
+      <div class="tri-2 green"></div>
+      <div class="tri-1 red"></div>
+    </div>
+    <div class="block">
+      <div class="tri-3 yellow"></div>
+      <div class="tri-2 red"></div>
+      <div class="tri-1 green"></div>
+    </div>
+    <div class="block">
+      <div class="tri-3 green"></div>
+      <div class="tri-2 yellow"></div>
+      <div class="tri-1 red"></div>
+    </div>
+    <div class="block">
+      <div class="tri-3 green"></div>
+      <div class="tri-2 red"></div>
+      <div class="tri-1 yellow"></div>
+    </div>
+    <div class="block">
+      <div class="tri-3 red"></div>
+      <div class="tri-2 green"></div>
+      <div class="tri-1 yellow"></div>
+    </div>
+    <div class="block">
+      <div class="tri-3 red"></div>
+      <div class="tri-2 yellow"></div>
+      <div class="tri-1 green"></div>
+    </div>
+  </body>
+</html>
