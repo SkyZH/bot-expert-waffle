@@ -1,6 +1,7 @@
 import numpy as np
 import cv2
 from operator import itemgetter
+
 _bound = {
     "hsv_red": (np.array([0, 101, 67]), np.array([20, 255, 255])),
     "hsv_yellow": (np.array([20, 142, 67]), np.array([90, 255, 255])),
@@ -35,17 +36,17 @@ class OpenCvCapture(object):
         self.cv2_cap = cv2_cap
 
     def show_video(self):
-        """
-        Run loop for cv2 capture
-        """
-        print("Running, ESC or Ctrl-c to exit...")
         while True:
             ret, img = self.cv2_cap.read()
 
             hsv = cv2.cvtColor(img, cv2.COLOR_BGR2HSV)
+
+            # Extract Red, Yellow and Blue from Image
             red_area = cv2.inRange(hsv, _bound["hsv_red"][0], _bound["hsv_red"][1])
             yellow_area = cv2.inRange(hsv, _bound["hsv_yellow"][0], _bound["hsv_yellow"][1])
             blue_area = cv2.inRange(hsv, _bound["hsv_blue"][0], _bound["hsv_blue"][1])
+
+            # Combind all three colors to find the triangle
             processed_area = cv2.bitwise_or(cv2.bitwise_or(red_area, yellow_area), blue_area)
             processed_area = cv2.blur(processed_area, (5, 5))
 
@@ -55,17 +56,19 @@ class OpenCvCapture(object):
             avg_area = [cv2.contourArea(cnt) for cnt in contours]
 
             for cnt in contours:
-                    # [point_x, point_y, width, height] = cv2.boundingRect(cnt)
+                # Simplify polygens and find triangles
                 approx = cv2.approxPolyDP(
                     cnt, 0.03 * cv2.arcLength(cnt, True), True)
-                area = cv2.contourArea(cnt)
+
                 if len(approx) == 3:
                     points = np.array(approx[:,0])
+                    # Find the max angle
                     angles = enumerate([get_angle(points[1], points[0], points[2]), get_angle(points[0], points[1], points[2]), get_angle(points[0], points[2], points[1])])
                     max_angle = max(angles, key=itemgetter(1))
                     if 75 <= max_angle[1] and max_angle[1] <= 105:
                         coordinates.append([cnt])
                         cv2.drawContours(img, [cnt], 0, (0, 0, 255), 3)
+                        # Get the top point and the middle of bottom segment
                         top = points[max_angle[0]]
                         bottom = (points[0] + points[1] + points[2] - top) / 2
                         colors = []
@@ -78,6 +81,8 @@ class OpenCvCapture(object):
                                 colors.append(color)
                                 lst_color = color
                         direction = bottom - top
+
+                        # Print color combinition and steering degree
                         print(colors, np.angle(direction[0] + direction[1] * 1j, deg=True))
 
             cv2.imshow('PROCESSED', cv2.resize(processed_area, (384, 216)))
